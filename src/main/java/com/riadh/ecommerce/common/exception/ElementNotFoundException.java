@@ -1,0 +1,17 @@
+package com.riadh.ecommerce.common.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ElementNotFoundException extends RuntimeException {
+
+    public ElementNotFoundException(String element, Long id) {
+        super(element + " avec l'id " + id + " est introuvable");
+    }
+
+    public ElementNotFoundException(String message) {
+        super(message);
+    }
+}
+

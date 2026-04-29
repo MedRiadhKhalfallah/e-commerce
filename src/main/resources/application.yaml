@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ecommerce
+
+  datasource:
+    url: jdbc:mysql://db:3306/ecommerce
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 8080
