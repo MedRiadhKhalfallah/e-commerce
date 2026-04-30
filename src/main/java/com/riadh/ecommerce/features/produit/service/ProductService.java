@@ -11,12 +11,14 @@ import com.riadh.ecommerce.features.produit.entity.Product;
 import com.riadh.ecommerce.features.produit.mapper.ProductMapper;
 import com.riadh.ecommerce.features.produit.repository.ProductRepository;
 import com.riadh.ecommerce.features.produit.specification.ProductSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class ProductService implements IProductService {
 
@@ -30,27 +32,19 @@ public class ProductService implements IProductService {
     private ProductMapper productMapper;
 
     @Override
-    @Transactional
-    public ProductResponse addProduct(ProductCreateRequest dto) {
-        Product product = productMapper.toEntity(dto);
-        if (dto.getCategoryId() != null) {
-            Category category = categoryRepository.findById(dto.getCategoryId())
-                    .orElseThrow(() -> new ElementNotFoundException("Category", dto.getCategoryId()));
-            product.setCategory(category);
-        }
-        return productMapper.toResponse(productRepository.save(product));
-    }
-
-    @Override
     public ProductResponse getProductById(Long id) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ElementNotFoundException("Product", id));
-        return productMapper.toResponse(product);
+        return productRepository.findById(id)
+                .map(productMapper::toResponse)
+                .orElseThrow(() -> {
+                    log.warn("[PRODUCT] Produit introuvable : id={}", id);
+                    return new ElementNotFoundException("Product", id);
+                });
     }
 
     @Override
     public void deleteProductById(Long id) {
         if (!productRepository.existsById(id)) {
+            log.warn("[PRODUCT] Tentative de suppression d'un produit inexistant : id={}", id);
             throw new ElementNotFoundException("Product", id);
         }
         productRepository.deleteById(id);
@@ -60,14 +54,35 @@ public class ProductService implements IProductService {
     @Transactional
     public void updateProduct(ProductUpdateRequest dto, Long productId) {
         Product existing = productRepository.findById(productId)
-                .orElseThrow(() -> new ElementNotFoundException("Product", productId));
+                .orElseThrow(() -> {
+                    log.warn("[PRODUCT] Produit introuvable pour mise à jour : id={}", productId);
+                    return new ElementNotFoundException("Product", productId);
+                });
         productMapper.updateProductFromDto(dto, existing);
         if (dto.getCategoryId() != null) {
             Category category = categoryRepository.findById(dto.getCategoryId())
-                    .orElseThrow(() -> new ElementNotFoundException("Category", dto.getCategoryId()));
+                    .orElseThrow(() -> {
+                        log.warn("[PRODUCT] Catégorie introuvable lors de la mise à jour : id={}", dto.getCategoryId());
+                        return new ElementNotFoundException("Category", dto.getCategoryId());
+                    });
             existing.setCategory(category);
         }
         productRepository.save(existing);
+    }
+
+    @Override
+    @Transactional
+    public ProductResponse addProduct(ProductCreateRequest dto) {
+        Product product = productMapper.toEntity(dto);
+        if (dto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() -> {
+                        log.warn("[PRODUCT] Catégorie introuvable lors de l'ajout : id={}", dto.getCategoryId());
+                        return new ElementNotFoundException("Category", dto.getCategoryId());
+                    });
+            product.setCategory(category);
+        }
+        return productMapper.toResponse(productRepository.save(product));
     }
 
     @Override
