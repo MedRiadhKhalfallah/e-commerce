@@ -10,5 +10,7 @@ RUN mvn dependency:go-offline
 COPY src ./src
 
 EXPOSE 8992
+EXPOSE 5005
 
-CMD ["mvn", "spring-boot:run"]
+# Run with devtools and optional debug
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]

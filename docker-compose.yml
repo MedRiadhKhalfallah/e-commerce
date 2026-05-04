@@ -17,6 +17,7 @@ services:
     container_name: springboot-dev
     ports:
       - "8992:8080"
+      - "5005:5005"
     volumes:
       - .:/app
       - ~/.m2:/root/.m2
@@ -26,6 +27,11 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/ecommerce
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
+      # Enable devtools restart trigger
+      - SPRING_DEVTOOLS_RESTART_ENABLED=true
+      - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+    # Add this: restart policy to watch for changes
+    restart: unless-stopped
 
 volumes:
   db_data:
