@@ -1,11 +1,19 @@
 spring:
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      base-url: https://openrouter.ai/api/v1
+      chat:
+        options:
+          model: nvidia/nemotron-3-nano-30b-a3b:free
+
   application:
     name: ecommerce
 
   datasource:
-    url: jdbc:mysql://db:3306/ecommerce
-    username: root
-    password: root
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,3 +21,6 @@ spring:
 
 server:
   port: 8080
+
+api:
+  prefix: /api/v1

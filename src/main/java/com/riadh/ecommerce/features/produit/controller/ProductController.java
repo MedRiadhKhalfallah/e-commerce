@@ -4,7 +4,6 @@ import com.riadh.ecommerce.features.produit.dto.ProductCreateRequest;
 import com.riadh.ecommerce.features.produit.dto.ProductFilterRequest;
 import com.riadh.ecommerce.features.produit.dto.ProductResponse;
 import com.riadh.ecommerce.features.produit.dto.ProductUpdateRequest;
-import com.riadh.ecommerce.features.produit.entity.Product;
 import com.riadh.ecommerce.features.produit.service.IProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("${api.prefix}/products")
 public class ProductController {
 
     @Autowired
