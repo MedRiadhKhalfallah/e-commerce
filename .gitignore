@@ -37,3 +37,7 @@ build/
 .env.local
 .env.development
 .env.production
+
+### credentials ###
+credentials/
+tokens/

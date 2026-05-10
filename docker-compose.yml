@@ -31,6 +31,9 @@ services:
       # Enable devtools restart trigger
       - SPRING_DEVTOOLS_RESTART_ENABLED=true
       - SPRING_DEVTOOLS_LIVERELOAD_ENABLED=true
+      - credentials-CREDENTIALS_GOOGLE_OAUTH= ${CREDENTIALS_GOOGLE_OAUTH}
+      - root-GOOGLE_DRIVE_ROOT_FOLDER_ID-id= ${GOOGLE_DRIVE_ROOT_FOLDER_ID}
+      - tokens-TOKENS_DIRECTORY= ${TOKENS_DIRECTORY}
     env_file:
       - .env
     # Add this: restart policy to watch for changes

@@ -18,9 +18,30 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 server:
   port: 8080
 
 api:
   prefix: /api/v1
+
+file:
+  upload-base-path: files
+storage:
+  # Valeurs possibles : local | s3 | googleDrive
+  provider: googleDrive
+
+google:
+  drive:
+    # Chemin vers le fichier JSON OAuth2 (credentials-google-oauth.json)
+    credentials-path: ${CREDENTIALS_GOOGLE_OAUTH}
+    # ID du dossier racine Google Drive dans lequel uploader les fichiers
+    root-folder-id: ${GOOGLE_DRIVE_ROOT_FOLDER_ID}
+    # Dossier local où stocker les tokens OAuth2 (access_token + refresh_token)
+    tokens-directory: ${TOKENS_DIRECTORY}
+    # URI de redirection enregistrée dans Google Cloud Console
+    redirect-uri: http://localhost:${server.port}/api/google/callback
